@@ -1,28 +1,192 @@
-<!-- 在A域名的页面中 -->
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <script>
-        // 获取ID并生成二维码
-        const path = window.location.pathname;
-        const id = path.replace(/^\//, '');
-        
-        if (id) {
-            const targetUrl = `https://B域名.com/${id}`;
-            
-            // 使用第三方二维码API（例如：Google Charts API）
-            const qrCodeUrl = `https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=${encodeURIComponent(targetUrl)}`;
-            
-            document.write(`
-                <div>
-                    <h2>ID: ${id}</h2>
-                    <img src="${qrCodeUrl}" alt="二维码" />
-                    <p>扫描二维码访问: <a href="${targetUrl}">${targetUrl}</a></p>
-                </div>
-            `);
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编号跳转工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-    </script>
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            padding: 40px 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: #4a4a4a;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            margin-bottom: 30px;
+            color: #666;
+        }
+        
+        .input-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+            box-shadow: 0 7px 14px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .info {
+            margin-top: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .example {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: #888;
+        }
+        
+        @media (max-width: 500px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>探索大师的世界</h1>
+        <p class="subtitle">输入编号，探索目标作者</p >
+        
+        <div class="input-group">
+            <label for="id-input">请输入编号：</label>
+            <input type="text" id="id-input" placeholder="例如: 12345" autocomplete="off">
+        </div>
+        
+        <button class="btn" id="jump-btn">探索到目标页面</button>
+        
+        <div class="info">
+            <p>进入编号: <span id="target-url"></span><span id="id-display">[编号]</span></p >
+        </div>
+        
+        <div class="example">
+            <p>示例: 输入编号 123 </p >
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const idInput = document.getElementById('id-input');
+            const jumpBtn = document.getElementById('jump-btn');
+            const idDisplay = document.getElementById('id-display');
+            const targetUrl = document.getElementById('target-url');
+            
+            // 更新显示的编号
+            idInput.addEventListener('input', function() {
+                const idValue = idInput.value.trim();
+                idDisplay.textContent = idValue || '[编号]';
+            });
+            
+            // 跳转按钮点击事件
+            jumpBtn.addEventListener('click', function() {
+                const idValue = idInput.value.trim();
+                
+                if (!idValue) {
+                    alert('请输入编号！');
+                    idInput.focus();
+                    return;
+                }
+                let arr = idValue.split('D')
+                // 这里替换为你实际的域名
+                const targetDomain = 'https://jue906.cn/mobile/pages/user/user';
+                let targetPath = '';
+                if(arr.hasOwnProperty(1)){
+                    targetPath = 'mer_id=' + arr[0] + '&spread_id=' + arr[1];
+                }else{
+                    targetPath = '?mer_id=' + arr[0];
+                }
+                
+                // 跳转到目标页面
+                window.location.href = targetDomain + targetPath;
+            });
+            
+            // 按回车键也可以跳转
+            idInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    jumpBtn.click();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
